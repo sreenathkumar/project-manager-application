@@ -6,6 +6,9 @@ export const teamApi = apiSlice.injectEndpoints({
       getTeams: builder.query({
          query: () => '/teams'
       }),
+      getSigleTeam: builder.query({
+         query: (id) => `/teams/${id}`
+      }),
       createTeam: builder.mutation({
          query: (data) => ({
             url: '/teams',
@@ -15,7 +18,6 @@ export const teamApi = apiSlice.injectEndpoints({
 
          async onQueryStarted({ data }, { queryFulfilled, dispatch }) {
             const team = await queryFulfilled;
-            console.log(team)
             if (team) {
                dispatch(apiSlice.util.updateQueryData("getTeams", data, (draft) => {
                   team.data.id.toString()
@@ -26,8 +28,16 @@ export const teamApi = apiSlice.injectEndpoints({
                }))
             }
          },
+      }),
+      editTeam: builder.mutation({
+         query: ({ id, data }) => ({
+            url: `/teams/${id}`,
+            method: 'PATCH',
+            body: data
+         }),
+
       })
    })
 })
 
-export const { useCreateTeamMutation, useGetTeamsQuery } = teamApi
+export const { useCreateTeamMutation, useGetTeamsQuery, useEditTeamMutation } = teamApi

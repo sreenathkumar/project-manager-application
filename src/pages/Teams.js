@@ -1,14 +1,13 @@
 import { useState } from "react"
-import ModalAddTeam from "../components/teams/ModalAddTeam";
+import AddTeamModal from "../components/teams/AddTeamModal";
 import TeamCard from "../components/teams/TeamCard";
 import { useGetTeamsQuery } from "../features/team/teamApi";
 import Loader from '../components/ui/Loader'
 
 export default function Teams() {
-   const [modalOpen, setModalOpen] = useState(false);
-
    const { data: teams, isLoading, isError } = useGetTeamsQuery() || {};
 
+   const [modalOpen, setModalOpen] = useState(false);
    const modalControl = () => {
       setModalOpen(!modalOpen);
    }
@@ -23,7 +22,7 @@ export default function Teams() {
    }
    if (!isLoading && !isError) {
       content = <>
-         {modalOpen && <ModalAddTeam open={modalOpen} control={modalControl} />}
+         {modalOpen && <AddTeamModal open={modalOpen} control={modalControl} />}
          <div className="px-10 mt-6 flex justify-between">
             <h1 className="text-2xl font-bold">Teams</h1>
             <button onClick={modalControl}

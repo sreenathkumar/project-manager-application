@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useCreateTeamMutation } from '../../features/team/teamApi';
 
-export default function ModalAddTeam({ open, control }) {
+export default function AddTeamModal({ open, control }) {
    const [title, setTitle] = useState('');
    const [description, setDescription] = useState('');
    const { user } = useSelector((state) => state.auth);
