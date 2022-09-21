@@ -21,7 +21,7 @@ export default function Login() {
          setError(responseError.data);
       }
       if (data?.accessToken && data?.user) {
-         navigate("/projects");
+         navigate("/teams");
       }
       if (isLoading) {
          setLoading(true)
