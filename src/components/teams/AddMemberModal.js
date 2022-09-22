@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useGetMemberQuery } from "../../features/members/membersApi";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { membersApi, useGetMemberQuery } from "../../features/members/membersApi";
 import { useEditTeamMutation } from "../../features/team/teamApi";
 import debounceHandler from "../../features/util/debounceHandler";
 import isValidEmail from "../../features/util/isValidEmail";
@@ -8,15 +8,52 @@ import Error from "../ui/Error";
 
 
 export default function AddMemberModal({ team, open, control }) {
-   const [memberEmail, setMemberEmail] = useState('')
+   const [memberEmail, setMemberEmail] = useState('');
+   const [memberExists, setMemberExists] = useState(false)
    const [memberCheck, setMemberCheck] = useState(false);
    const { user: loggedInUser } = useSelector((state) => state.auth) || {};
    const { email: myEmail } = loggedInUser || {};
+   const [responseError, setResponseError] = useState('')
 
-   const [editTeam] = useEditTeamMutation()
+   const dispatch = useDispatch();
+   const [editTeam, { isSuccess: editTeamSuccess }] = useEditTeamMutation();
    const { data: member } = useGetMemberQuery(memberEmail, {
       skip: !memberCheck,
    });
+
+   useEffect(() => {
+      if (member?.length > 0 && member[0].email !== myEmail) {
+         // check conversation existance
+
+         dispatch(
+            membersApi.endpoints.getMemberTeams.initiate({
+               id: team.id
+            }, { forceRefetch: true })
+         )
+            .unwrap()
+            .then((data) => {
+               console.log('data:', data)
+               console.log('Member:', member)
+               const foundMember = data[0]?.members.find((item) => item.email === member[0].email)
+               console.log(foundMember)
+               if (foundMember) {
+                  setMemberExists(true)
+               }
+            })
+            .catch((err) => {
+               setResponseError("There was a problem!");
+            });
+      }
+   }, [team, dispatch, member, myEmail]);
+
+   console.log(member);
+   // listen conversation add/edit success
+   useEffect(() => {
+      if (editTeamSuccess) {
+         control();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+   }, [editTeamSuccess]);
 
    const doSearch = (value) => {
       if (isValidEmail(value)) {
@@ -30,19 +67,18 @@ export default function AddMemberModal({ team, open, control }) {
       e.preventDefault();
 
       const newArray = {
-         ...team, members: [...team.members, { email: member[0]?.email, name: member[0]?.name, id: member[0]?.id }]
+         "members": [...team.members, { email: member[0]?.email, name: member[0]?.name, id: member[0]?.id }]
       }
-
       editTeam({
          id: team?.id,
          data: newArray
       })
-      control();
+      setMemberEmail('')
    }
 
    const handleSearch = debounceHandler(doSearch, 500);
    return (
-      <div id="authentication-modal" tabIndex="-1" aria-hidden="true" className={`${!open && "hidden"} bg-opacity-50 bg-slate-700 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full flex justify-center items-center`}>
+      <div id="authentication-modal" tabIndex="-1" aria-hidden="true" className={`${!open && "hidden"} bg-opacity-50 bg-slate-700 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-screen flex justify-center items-center`}>
          <div className="relative p-4 w-full max-w-md h-full md:h-auto">
 
             <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -62,9 +98,7 @@ export default function AddMemberModal({ team, open, control }) {
 
 
                      <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                        disabled={
-                           (member?.length > 0 && member[0].email === myEmail)
-                        }
+                        disabled={memberExists && (member?.length > 0 && member[0].email === myEmail)}
                      >
                         Add Member
                      </button>
@@ -75,8 +109,11 @@ export default function AddMemberModal({ team, open, control }) {
                         member[0].email === myEmail && (
                            <Error message="You are already in the team!" />
                         )}
+                     {memberExists && (
+                        <Error message="The user already in the team!" />
+                     )}
 
-                     {/* {responseError && <Error message={responseError} />} */}
+                     {responseError && <Error message={responseError} />}
                   </form>
                </div>
             </div>

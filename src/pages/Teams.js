@@ -3,9 +3,24 @@ import AddTeamModal from "../components/teams/AddTeamModal";
 import TeamCard from "../components/teams/TeamCard";
 import { useGetTeamsQuery } from "../features/team/teamApi";
 import Loader from '../components/ui/Loader'
+import { useSelector } from "react-redux";
 
 export default function Teams() {
+   const { email } = useSelector((state) => state.auth.user)
    const { data: teams, isLoading, isError } = useGetTeamsQuery() || {};
+
+   const filteredTeams = teams?.filter((team) => {
+
+      const founded = team.members.filter((member) => member.email === email);
+      if (founded?.length > 0) {
+         return true;
+      } else {
+         return false
+      }
+   }
+
+   );
+
 
    const [modalOpen, setModalOpen] = useState(false);
    const modalControl = () => {
@@ -46,7 +61,7 @@ export default function Teams() {
          <div
             className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 px-10 mt-4 gap-6 overflow-auto"
          >
-            {teams?.map((team) => <TeamCard key={team.id} team={team} />)}
+            {filteredTeams?.map((team) => <TeamCard key={team.id} team={team} />)}
          </div>
       </>
    }
