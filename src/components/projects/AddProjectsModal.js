@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useCreateProjectMutation } from "../../features/projects/projectsApi"
-import { useGetSigleTeamQuery } from "../../features/team/teamApi"
+import { useGetSigleTeamQuery, useGetTeamsQuery } from "../../features/team/teamApi"
 
 
 export default function AddProjectsModal({ control, open }) {
@@ -14,6 +14,7 @@ export default function AddProjectsModal({ control, open }) {
    const dispatch = useDispatch();
    const { user: loggedInUser } = useSelector((state) => state.auth) || {};
    const { email: myEmail } = loggedInUser || {};
+   const { data: myTeams } = useGetTeamsQuery(myEmail)
    const [creatProject, { isLoading, isError, isSuccess }] = useCreateProjectMutation() || []
 
    const { data: team } = useGetSigleTeamQuery(teamId, {
@@ -96,19 +97,25 @@ export default function AddProjectsModal({ control, open }) {
                   <form className="space-y-6" onSubmit={() => { }}>
                      <div>
                         <label htmlFor="team-title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Poject Tiltle</label>
-                        <input type="text" name="team-title" id="team-title" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Lorem Ipsum is simply dummy text" required value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <input type="text" name="team-title" id="team-title" className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Lorem Ipsum is simply dummy text" required value={title} onChange={(e) => setTitle(e.target.value)} />
                      </div>
                      <div>
-                        <label htmlFor="team-id" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Team ID</label>
-                        <input type="text" name="team-id" id="team-id" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="TeamName_000" required value={teamId} onChange={(e) => setTeamId(e.target.value)} />
+                        <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
+                        <select id="countries" className="outline-none bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                           <option defaultValue>Choose a team</option>
+                           {myTeams?.map((team, index) => <option key={index} value={team.id}>
+                              {team.title + " "}
+                              ({team.title.replace(/\s+/g, '')}_{team.id})
+                           </option>)}
+
+                        </select>
                      </div>
                      <div>
                         <label htmlFor="team-description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Project Description</label>
-                        <textarea type="textarea" name="team-description" id="team-description" placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry." className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <textarea type="textarea" name="team-description" id="team-description" placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry." className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required value={description} onChange={(e) => setDescription(e.target.value)} />
                      </div>
 
                      <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create Project</button>
-
                   </form>
                </div>
             </div>

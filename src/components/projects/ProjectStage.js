@@ -1,23 +1,34 @@
 import React, { useState } from 'react'
+import { useDrop } from 'react-dnd';
 import { useGetProjectsQuery } from '../../features/projects/projectsApi';
 import AddProjectsModal from './AddProjectsModal';
 import ProjectCard from './ProjectCard'
 
-export default function ProjectStage({ name }) {
+export default function ProjectStage({ name, }) {
    const [modalOpen, setModalOpen] = useState(false);
-   const { data: projects } = useGetProjectsQuery(name) || {};
+   const { data: projects } = useGetProjectsQuery() || {};
+   const filteredProjects = projects?.filter(project => project.status === name);
+   const [{ isOver }, drop] = useDrop(() => ({
+      accept: 'projectCard',
+      drop: (item) => actionOnDrop(item.id)
+   }))
+
+   const actionOnDrop = (id) => {
+      console.log(id);
+      ///Doing what happen after dropping the item
+   }
 
    const modalControl = () => {
       setModalOpen(!modalOpen);
    }
    return (
       <> {modalOpen && <AddProjectsModal control={modalControl} open={modalOpen} />}
-         <div className="flex flex-col flex-shrink-0 w-72">
+         <div className="flex flex-col flex-shrink-0 w-72 bg-white bg-opacity-30" ref={drop}>
             <div className="flex items-center flex-shrink-0 h-10 px-2">
                <span className="block text-sm font-semibold">{name}</span>
                <span
                   className="flex items-center justify-center w-5 h-5 ml-2 text-sm font-semibold text-indigo-500 bg-white rounded bg-opacity-30"
-               >6</span
+               >{filteredProjects?.length}</span
                >
                {name === "Backlog" && <button onClick={() => setModalOpen(!modalOpen)}
                   className="flex items-center justify-center w-6 h-6 ml-auto text-indigo-500 rounded hover:bg-indigo-500 hover:text-indigo-100"
@@ -38,7 +49,7 @@ export default function ProjectStage({ name }) {
                </button>}
             </div>
             <div className="flex flex-col pb-2 overflow-auto .scrollbar scrollbar-style">
-               {projects?.map((item, index) => <ProjectCard key={index} project={item} />)}
+               {filteredProjects?.map((item, index) => <ProjectCard key={index} project={item} />)}
             </div>
          </div>
       </>

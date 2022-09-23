@@ -3,7 +3,7 @@ import { apiSlice } from "../api/apiSlice";
 export const projectApi = apiSlice.injectEndpoints({
    endpoints: (builder) => ({
       getProjects: builder.query({
-         query: (stage) => `/projects?status=${stage}`
+         query: () => `/projects`
       }),
       createProject: builder.mutation({
          query: (data) => ({

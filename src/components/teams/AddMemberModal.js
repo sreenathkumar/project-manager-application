@@ -60,7 +60,7 @@ export default function AddMemberModal({ team, open, control }) {
          setMemberExists(false)
       }
    };
-   console.log("member: ", member);
+
    const handleSubmit = (e) => {
       e.preventDefault();
 

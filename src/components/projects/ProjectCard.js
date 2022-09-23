@@ -1,10 +1,17 @@
-import React from 'react'
+import { useDrag } from "react-dnd"
+import convertTime from "../../utils/convertTime"
 
-export default function ProjectCard() {
+
+export default function ProjectCard({ project }) {
+   const { id, title, description, avatar, timestamp } = project || {}
+   const [{ }, drag] = useDrag(() => ({
+      type: "projectCard",
+      item: { id }
+   }))
    return (
-      <div
+      <div ref={drag}
          className="relative flex flex-col items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
-         draggable="true"
+
       >
          <button
             className="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 mt-3 mr-2 text-gray-500 rounded hover:bg-gray-200 hover:text-gray-700 group-hover:flex"
@@ -22,11 +29,10 @@ export default function ProjectCard() {
          </button>
          <span
             className="flex items-center h-6 px-3 text-xs font-semibold text-pink-500 bg-pink-100 rounded-full"
-         >Design</span
+         >{title}</span
          >
          <h4 className="mt-3 text-sm font-medium">
-            This is the title of the card for the thing that
-            needs to be done.
+            {description}
          </h4>
          <div
             className="flex items-center w-full mt-3 text-xs font-medium text-gray-400"
@@ -45,13 +51,13 @@ export default function ProjectCard() {
                   />
                </svg>
                <span className="ml-1 leading-none"
-               >Dec 12</span
+               >{convertTime(timestamp)}</span
                >
             </div>
 
             <img
                className="w-6 h-6 ml-auto rounded-full"
-               src="https://randomuser.me/api/portraits/women/26.jpg" alt=''
+               src={avatar} alt=''
             />
          </div>
       </div>

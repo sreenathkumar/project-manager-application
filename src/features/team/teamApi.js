@@ -26,9 +26,9 @@ export const teamApi = apiSlice.injectEndpoints({
             try {
                await cacheDataLoaded;
                socket.on("teams", (data) => {
-                  console.log(data);
+
                   updateCachedData((draft) => {
-                     console.log(JSON.parse(JSON.stringify(draft)))
+
                      //const foundUser = data?.data?.members.find((membar) => member.email ===)
                      if (data?.data) {
 
