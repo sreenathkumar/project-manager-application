@@ -5,22 +5,25 @@ import { useGetTeamsQuery } from "../features/team/teamApi";
 import Loader from '../components/ui/Loader'
 import { useSelector } from "react-redux";
 
+
+
 export default function Teams() {
    const { email } = useSelector((state) => state.auth.user)
    const { data: teams, isLoading, isError } = useGetTeamsQuery() || {};
 
-   const filteredTeams = teams?.filter((team) => {
 
-      const founded = team.members.filter((member) => member.email === email);
-      if (founded?.length > 0) {
-         return true;
-      } else {
-         return false
-      }
-   }
-
-   );
-
+   // const teamIds = []
+   // const filteredTeams = teams?.filter((team) => {
+   //    const founded = team.members.filter((member) => member.email === email);
+   //    if (founded?.length > 0) {
+   //       teamIds.push(team.id)
+   //       return true;
+   //    } else {
+   //       return false
+   //    }
+   // }
+   // );
+   // console.log(teamIds);
 
    const [modalOpen, setModalOpen] = useState(false);
    const modalControl = () => {
@@ -61,7 +64,7 @@ export default function Teams() {
          <div
             className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 px-10 mt-4 gap-6 overflow-auto"
          >
-            {filteredTeams?.map((team) => <TeamCard key={team.id} team={team} />)}
+            {teams?.map((team) => <TeamCard key={team.id} team={team} />)}
          </div>
       </>
    }

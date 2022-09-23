@@ -5,7 +5,7 @@ export const teamApi = apiSlice.injectEndpoints({
 
    endpoints: (builder) => ({
       getTeams: builder.query({
-         query: () => `/teams`,
+         query: (userEmail) => `/teams?members_like${userEmail}_sort=timestamp&_order=desc`,
 
          //put socket listners here
          async onCacheEntryAdded(
@@ -28,6 +28,11 @@ export const teamApi = apiSlice.injectEndpoints({
                socket.on("teams", (data) => {
                   console.log(data);
                   updateCachedData((draft) => {
+                     console.log(JSON.parse(JSON.stringify(draft)))
+                     //const foundUser = data?.data?.members.find((membar) => member.email ===)
+                     if (data?.data) {
+
+                     }
 
                      //draft.data.push(data?.data)
                   });
@@ -39,10 +44,9 @@ export const teamApi = apiSlice.injectEndpoints({
             await cacheEntryRemoved;
             socket.close();
          },
-
       }),
       getSigleTeam: builder.query({
-         query: (id) => `/teams/${id}`
+         query: ({ id }) => `/teams/${id}`
       }),
       createTeam: builder.mutation({
          query: (data) => ({
@@ -75,4 +79,4 @@ export const teamApi = apiSlice.injectEndpoints({
    })
 })
 
-export const { useCreateTeamMutation, useGetTeamsQuery, useEditTeamMutation } = teamApi
+export const { useCreateTeamMutation, useGetTeamsQuery, useEditTeamMutation, useGetSigleTeamQuery } = teamApi

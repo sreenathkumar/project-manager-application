@@ -19,4 +19,4 @@ export const membersApi = apiSlice.injectEndpoints({
    })
 })
 
-export const { useGetMemberQuery, useGetMemberTeamsQuery } = membersApi
+export const { useGetMemberQuery, useGetMemberTeamsQuery, useAddMemberMutation } = membersApi

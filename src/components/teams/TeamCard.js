@@ -1,10 +1,10 @@
 import { useState } from "react";
-import convertTime from "../../features/util/convertTime";
+import convertTime from "../../utils/convertTime";
 import AddMemberModal from "./AddMemberModal";
 
 
 export default function TeamCard({ team }) {
-   const { title, description, timestamp } = team || {};
+   const { title, description, timestamp, id } = team || {};
    const time = convertTime(timestamp);
    const [modalOpen, setModalOpen] = useState(false);
    const modalControl = () => {
@@ -40,7 +40,7 @@ export default function TeamCard({ team }) {
                {description}
             </h4>
             <div
-               className="flex items-center w-full mt-3 text-xs font-medium text-gray-400"
+               className="flex items-center justify-between w-full mt-3 text-xs font-medium text-gray-400"
             >
                <div className="flex items-center">
                   <svg
@@ -56,6 +56,9 @@ export default function TeamCard({ team }) {
                      />
                   </svg>
                   <span className="ml-1 leading-none">{time}</span>
+               </div>
+               <div className="flex items-center">
+                  <span className="ml-1 leading-none">ID: {title.replace(/\s+/g, '')}_{id}</span>
                </div>
             </div>
          </div>

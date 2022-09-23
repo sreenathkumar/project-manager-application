@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import Navbar from './components/ui/Navbar';
@@ -13,19 +13,20 @@ function App() {
   return (!authChecked ?
     <div>Checking Authentication ......</div>
     :
+
     <div
       className="flex flex-col w-screen h-screen overflow-auto text-gray-700 bg-gradient-to-tr from-blue-200 via-indigo-200 to-pink-200"
-    >
-      <Navbar />
+    ><BrowserRouter>
+        <Navbar />
 
-      <Routes>
+        <Routes>
 
-        <Route path='/' element={<PublicRoute><Login /></PublicRoute>} />
-        <Route path='/teams' element={<PrivateRoute><Teams /></PrivateRoute>} />
-        <Route path='/projects' element={<PrivateRoute><Projects /></PrivateRoute>} />
+          <Route path='/' element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path='/teams' element={<PrivateRoute><Teams /></PrivateRoute>} />
+          <Route path='/projects' element={<PrivateRoute><Projects /></PrivateRoute>} />
 
-      </Routes>
-
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

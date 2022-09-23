@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { membersApi, useGetMemberQuery } from "../../features/members/membersApi";
 import { useEditTeamMutation } from "../../features/team/teamApi";
-import debounceHandler from "../../features/util/debounceHandler";
-import isValidEmail from "../../features/util/isValidEmail";
+
+import debounceHandler from "../../utils/debounceHandler";
+import isValidEmail from "../../utils/isValidEmail";
 import Error from "../ui/Error";
 
 
@@ -32,10 +33,7 @@ export default function AddMemberModal({ team, open, control }) {
          )
             .unwrap()
             .then((data) => {
-               console.log('data:', data)
-               console.log('Member:', member)
-               const foundMember = data[0]?.members.find((item) => item.email === member[0].email)
-               console.log(foundMember)
+               const foundMember = data[0]?.users.find((item) => item.email === member[0].email)
                if (foundMember) {
                   setMemberExists(true)
                }
@@ -46,7 +44,6 @@ export default function AddMemberModal({ team, open, control }) {
       }
    }, [team, dispatch, member, myEmail]);
 
-   console.log(member);
    // listen conversation add/edit success
    useEffect(() => {
       if (editTeamSuccess) {
@@ -60,20 +57,23 @@ export default function AddMemberModal({ team, open, control }) {
          // check user API
          setMemberCheck(true);
          setMemberEmail(value);
+         setMemberExists(false)
       }
    };
-
+   console.log("member: ", member);
    const handleSubmit = (e) => {
       e.preventDefault();
 
       const newArray = {
-         "members": [...team.members, { email: member[0]?.email, name: member[0]?.name, id: member[0]?.id }]
+         "members": `${team?.members}-${member[0].email}`,
+         "users": [...team.users, { email: member[0]?.email, name: member[0]?.name, id: member[0]?.id }]
       }
       editTeam({
          id: team?.id,
          data: newArray
       })
       setMemberEmail('')
+      setMemberCheck(false)
    }
 
    const handleSearch = debounceHandler(doSearch, 500);

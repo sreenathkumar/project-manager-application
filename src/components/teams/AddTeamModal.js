@@ -14,7 +14,8 @@ export default function AddTeamModal({ open, control }) {
       createTeam({
          title,
          description,
-         members: [user],
+         members: user.email,
+         users: [user],
          admin: user,
          timestamp: new Date().getTime(),
       });
