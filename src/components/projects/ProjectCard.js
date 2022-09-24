@@ -6,7 +6,7 @@ export default function ProjectCard({ project }) {
    const { id, title, description, avatar, timestamp } = project || {}
    const [{ }, drag] = useDrag(() => ({
       type: "projectCard",
-      item: { id }
+      item: { id, project }
    }))
    return (
       <div ref={drag}

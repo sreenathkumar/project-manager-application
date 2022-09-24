@@ -1,21 +1,23 @@
 import React, { useState } from 'react'
 import { useDrop } from 'react-dnd';
-import { useGetProjectsQuery } from '../../features/projects/projectsApi';
+import { useEditProjectMutation, useGetProjectsQuery } from '../../features/projects/projectsApi';
 import AddProjectsModal from './AddProjectsModal';
 import ProjectCard from './ProjectCard'
 
-export default function ProjectStage({ name, }) {
+export default function ProjectStage({ name }) {
    const [modalOpen, setModalOpen] = useState(false);
    const { data: projects } = useGetProjectsQuery() || {};
+   const [editProject] = useEditProjectMutation() || {};
    const filteredProjects = projects?.filter(project => project.status === name);
-   const [{ isOver }, drop] = useDrop(() => ({
+   const [{ }, drop] = useDrop(() => ({
       accept: 'projectCard',
-      drop: (item) => actionOnDrop(item.id)
+      drop: (item) => actionOnDrop(item.id, item.project),
    }))
 
-   const actionOnDrop = (id) => {
-      console.log(id);
+   const actionOnDrop = (id, project) => {
       ///Doing what happen after dropping the item
+      const updatedProject = { status: name }
+      editProject({ id, data: updatedProject })
    }
 
    const modalControl = () => {
