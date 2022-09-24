@@ -6,15 +6,23 @@ import ProjectCard from './ProjectCard'
 
 export default function ProjectStage({ name }) {
    const [modalOpen, setModalOpen] = useState(false);
+   const [hovered, setHovered] = useState(false)
    const { data: projects } = useGetProjectsQuery() || {};
    const [editProject] = useEditProjectMutation() || {};
    const filteredProjects = projects?.filter(project => project.status === name);
-   const [{ }, drop] = useDrop(() => ({
+   const [{ isOver }, drop] = useDrop(() => ({
       accept: 'projectCard',
       drop: (item) => actionOnDrop(item.id, item.project),
+      collect: (monitor) => ({
+         isOver: !!monitor.isOver()
+      })
    }))
 
+   console.log(hovered);
+
+
    const actionOnDrop = (id, project) => {
+
       ///Doing what happen after dropping the item
       const updatedProject = { status: name }
       editProject({ id, data: updatedProject })
@@ -25,7 +33,7 @@ export default function ProjectStage({ name }) {
    }
    return (
       <> {modalOpen && <AddProjectsModal control={modalControl} open={modalOpen} />}
-         <div className="flex flex-col flex-shrink-0 w-72 bg-white bg-opacity-30" ref={drop}>
+         <div className={`flex flex-col flex-shrink-0 w-72 rounded ${isOver ? "border-black" : "border-transparent"} border bg-white bg-opacity-30`} ref={drop}>
             <div className="flex items-center flex-shrink-0 h-10 px-2">
                <span className="block text-sm font-semibold">{name}</span>
                <span

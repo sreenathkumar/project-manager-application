@@ -2,85 +2,42 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useCreateProjectMutation } from "../../features/projects/projectsApi"
 import { useGetSigleTeamQuery, useGetTeamsQuery } from "../../features/team/teamApi"
+import Error from "../ui/Error"
 
 
 export default function AddProjectsModal({ control, open }) {
    const [title, setTitle] = useState('')
-   const [description, setDescription] = useState()
-   const [teamId, setTeamId] = useState('')
-   const [teamIdCheck, setTeamIdCheck] = useState(false)
-   const [responseError, setResponseError] = useState('')
-
-   const dispatch = useDispatch();
+   const [description, setDescription] = useState('')
+   const [teamId, setTeamId] = useState("")
+   const [resError, setResError] = useState('')
    const { user: loggedInUser } = useSelector((state) => state.auth) || {};
    const { email: myEmail } = loggedInUser || {};
    const { data: myTeams } = useGetTeamsQuery(myEmail)
-   const [creatProject, { isLoading, isError, isSuccess }] = useCreateProjectMutation() || []
+   const [creatProject, { isLoading, isError, isSuccess, }] = useCreateProjectMutation() || []
 
-   const { data: team } = useGetSigleTeamQuery(teamId, {
-      skip: !teamIdCheck,
-   });
+   const handleSubmit = (e) => {
+      e.preventDefault()
+      if (teamId !== '' || teamId !== "Choose a team") {
+         const data = {
+            title,
+            description,
+            status: "Backlog",
+            teamIds: [teamId],
+            creator: `${myEmail}`,
+            timestamp: new Date().getTime(),
+            avatar: "https://img.freepik.com/free-vector/mysterious-mafia-man-smoking-cigarette_52683-34828.jpg?w=740&t=st=1663969436~exp=1663970036~hmac=bf4b7a0a5db566b5d8f176728e2c6f22b16758285e424a5fd24a1b63246c63ca"
+         }
+         creatProject(data)
+         setTitle('');
+         setDescription('');
+         setTeamId("")
+         control()
+      } else {
+         setResError("Choose a valid team")
+      }
 
-   // useEffect(() => {
-   //    if (team?.length > 0) {
-   //       // check team added or not e
-   //       dispatch(
-   //          membersApi.endpoints.getMemberTeams.initiate({
-   //             id: team.id
-   //          }, { forceRefetch: true })
-   //       )
-   //          .unwrap()
-   //          .then((data) => {
-   //             const foundMember = data[0]?.members.find((item) => item.email === member[0].email)
-   //             if (foundMember) {
-   //                setMemberExists(true)
-   //             }
-   //          })
-   //          .catch((err) => {
-   //             setResponseError("There was a problem!");
-   //          });
-   //    } else {
-   //       console.log("The team doesn't exist")
-   //    }
-   // }, [team, dispatch, member, myEmail]);
-
-   // // listen conversation add/edit success
-   // useEffect(() => {
-   //    if (editTeamSuccess) {
-   //       control();
-   //    }
-   //    // eslint-disable-next-line react-hooks/exhaustive-deps
-   // }, [editTeamSuccess]);
-
-   // // function to get Id from team ID
-   // function getSecondPart(str) {
-
-   //  return str.split('-')[1];
-   // };
-   // const doSearch = (value) => {
-   //    if (isValidEmail(value)) {
-   //       // check user API
-   //       setTeamIdCheck(true);
-   //       setTeamId(getSecondPart(value));
-   //       setMemberExists(false)
-   //    }
-   // };
-
-   // const handleSubmit = (e) => {
-   //    e.preventDefault();
-
-   //    const newArray = {
-
-   //    }
-   //    editTeam({
-   //       id: team?.id,
-   //       data: newArray
-   //    })
-   //    setMemberEmail('')
-   //    setMemberCheck(false)
-   // }
-
-   // const handleSearch = debounceHandler(doSearch, 500);
+   }
+   console.log(teamId)
    return (
       <div id="authentication-modal" tabIndex="-1" aria-hidden="true" className={`${!open && "hidden"} bg-opacity-50 bg-slate-700 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full flex justify-center items-center`}>
          <div className="relative p-4 w-full max-w-md h-full md:h-auto">
@@ -94,15 +51,15 @@ export default function AddProjectsModal({ control, open }) {
 
                <div className="py-6 px-6 lg:px-8">
                   <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">Create Project</h3>
-                  <form className="space-y-6" onSubmit={() => { }}>
+                  <form className="space-y-6" onSubmit={handleSubmit}>
                      <div>
                         <label htmlFor="team-title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Poject Tiltle</label>
                         <input type="text" name="team-title" id="team-title" className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Lorem Ipsum is simply dummy text" required value={title} onChange={(e) => setTitle(e.target.value)} />
                      </div>
                      <div>
                         <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
-                        <select id="countries" className="outline-none bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                           <option defaultValue>Choose a team</option>
+                        <select id="countries" className="outline-none bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required onChange={(e) => setTeamId(e.target.value)}>
+                           <option>Choose a team</option>
                            {myTeams?.map((team, index) => <option key={index} value={team.id}>
                               {team.title + " "}
                               ({team.title.replace(/\s+/g, '')}_{team.id})
@@ -112,10 +69,12 @@ export default function AddProjectsModal({ control, open }) {
                      </div>
                      <div>
                         <label htmlFor="team-description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Project Description</label>
-                        <textarea type="textarea" name="team-description" id="team-description" placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry." className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" required value={description} onChange={(e) => setDescription(e.target.value)} />
+                        <textarea type="textarea" name="team-description" id="team-description" placeholder="Lorem Ipsum is simply dummy text of the printing and typesetting industry." className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" value={description} onChange={(e) => setDescription(e.target.value)} />
                      </div>
 
-                     <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create Project</button>
+                     <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" disabled={(isLoading || isError) || resError}>Create Project</button>
+                     {isError && <Error message={'Something went wrong'} />}
+                     {resError && <Error message={resError} />}
                   </form>
                </div>
             </div>

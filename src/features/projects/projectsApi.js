@@ -1,10 +1,9 @@
-import { json } from "react-router-dom";
 import { apiSlice } from "../api/apiSlice";
 
 export const projectApi = apiSlice.injectEndpoints({
    endpoints: (builder) => ({
       getProjects: builder.query({
-         query: () => `/projects`
+         query: () => `/projects?_sort=timestamp&_order=desc`
       }),
       createProject: builder.mutation({
          query: (data) => ({
@@ -12,6 +11,23 @@ export const projectApi = apiSlice.injectEndpoints({
             method: 'POST',
             body: data
          }),
+         async onQueryStarted(args, { queryFulfilled, dispatch }) {
+            try {
+               const resData = await queryFulfilled;
+               console.log(resData);
+               // pasimistic update of projects cache
+               dispatch(apiSlice.util.updateQueryData(
+                  "getProjects",
+                  undefined,
+                  (draft) => {
+                     draft.unshift(resData.data)
+                  }
+               ))
+
+            } catch (error) {
+
+            }
+         }
       }),
       editProject: builder.mutation({
          query: ({ id, data }) => ({
@@ -21,7 +37,7 @@ export const projectApi = apiSlice.injectEndpoints({
          }),
 
          async onQueryStarted({ id, data }, { queryFulfilled, dispatch }) {
-            // optimistic updat of projects cache
+            // optimistic update of projects cache
             const statusUpdateResult = dispatch(apiSlice.util.updateQueryData(
                "getProjects",
                undefined,
