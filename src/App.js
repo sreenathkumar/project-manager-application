@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import Navbar from './components/ui/Navbar';
@@ -27,6 +28,7 @@ function App() {
 
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </div>
   );
 }

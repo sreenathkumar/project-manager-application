@@ -14,7 +14,6 @@ export const projectApi = apiSlice.injectEndpoints({
          async onQueryStarted(args, { queryFulfilled, dispatch }) {
             try {
                const resData = await queryFulfilled;
-               console.log(resData);
                // pasimistic update of projects cache
                dispatch(apiSlice.util.updateQueryData(
                   "getProjects",
@@ -56,8 +55,36 @@ export const projectApi = apiSlice.injectEndpoints({
                statusUpdateResult.undo()
             }
          }
+      }),
+      deleteProject: builder.mutation({
+         query: ({ id }) => ({
+            url: `/projects/${id}`,
+            method: 'DELETE',
+         }),
+         async onQueryStarted({ id }, { queryFulfilled, dispatch }) {
+            // optimistic update of projects cache
+            const deleteResult = dispatch(apiSlice.util.updateQueryData(
+               "getProjects",
+               undefined,
+               (draft) => {
+                  draft.forEach((project, index) => {
+
+                     if (project.id == id) {
+
+                        draft.splice(index, 1);
+                     }
+                  })
+               }
+            ))
+
+            try {
+               await queryFulfilled;
+            } catch (error) {
+               deleteResult.undo()
+            }
+         }
       })
    })
 })
 
-export const { useGetProjectsQuery, useCreateProjectMutation, useEditProjectMutation } = projectApi
+export const { useGetProjectsQuery, useCreateProjectMutation, useEditProjectMutation, useDeleteProjectMutation } = projectApi

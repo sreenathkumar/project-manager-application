@@ -1,6 +1,6 @@
 
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
+import { Link, useMatch } from 'react-router-dom'
 import { userLoggedOut } from '../../features/auth/authSlice';
 import useAuth from '../../hooks/useAuth';
 import logoImage from '../../assets/images/logo.svg'
@@ -10,6 +10,9 @@ export default function Navbar() {
    const dispatch = useDispatch()
    const userLoggedIn = useAuth();
 
+   const inProjectRoute = useMatch("/projects");
+   const inTeamRoute = useMatch("/teams");
+
    const handleLogOut = () => {
       dispatch(userLoggedOut())
    }
@@ -18,19 +21,19 @@ export default function Navbar() {
          className="flex items-center flex-shrink-0 w-full h-16 px-10 bg-white bg-opacity-75"
       >
          <Link to="/projects"><img src={logoImage} className="h-10 w-10" alt='my logo' /></Link>
-         <input
+         {inProjectRoute && <input
             className="flex items-center h-10 px-4 ml-10 text-sm bg-gray-200 rounded-full focus:outline-none focus:ring"
             type="search"
             placeholder="Search for anything…"
-         />
+         />}
          <div className="ml-10">
             <Link to="/projects"
-               className="mx-2 text-sm font-semibold text-indigo-700"
+               className={`mx-2 text-sm font-semibold ${inProjectRoute ? "text-indigo-700" : "text-gray-600 hover:text-indigo-700"}`}
 
             >Projects</Link
             >
             <Link to="/teams"
-               className="mx-2 text-sm font-semibold text-gray-600 hover:text-indigo-700"
+               className={`mx-2 text-sm font-semibold ${inTeamRoute ? "text-indigo-700" : "text-gray-600 hover:text-indigo-700"}`}
 
             >Team</Link
             >

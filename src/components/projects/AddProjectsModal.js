@@ -17,7 +17,7 @@ export default function AddProjectsModal({ control, open }) {
 
    const handleSubmit = (e) => {
       e.preventDefault()
-      if (teamId !== '' || teamId !== "Choose a team") {
+      if (teamId !== ' ' || teamId !== "Choose a team") {
          const data = {
             title,
             description,
@@ -37,7 +37,7 @@ export default function AddProjectsModal({ control, open }) {
       }
 
    }
-   console.log(teamId)
+
    return (
       <div id="authentication-modal" tabIndex="-1" aria-hidden="true" className={`${!open && "hidden"} bg-opacity-50 bg-slate-700 overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full flex justify-center items-center`}>
          <div className="relative p-4 w-full max-w-md h-full md:h-auto">
@@ -59,7 +59,7 @@ export default function AddProjectsModal({ control, open }) {
                      <div>
                         <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
                         <select id="countries" className="outline-none bg-gray-50 border border-gray-300 text-gray-900 mb-6 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required onChange={(e) => setTeamId(e.target.value)}>
-                           <option>Choose a team</option>
+                           <option value=''>Choose a team</option>
                            {myTeams?.map((team, index) => <option key={index} value={team.id}>
                               {team.title + " "}
                               ({team.title.replace(/\s+/g, '')}_{team.id})

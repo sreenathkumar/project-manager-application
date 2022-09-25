@@ -1,31 +1,44 @@
+import { useState } from "react"
 import { useDrag } from "react-dnd"
 import convertTime from "../../utils/convertTime"
+import DropdownMenu from "../ui/DropdownMenu"
 
 
 export default function ProjectCard({ project }) {
+   const [menuOpen, setMenuOpen] = useState(false)
    const { id, title, description, avatar, timestamp, status } = project || {}
+
    const [{ }, drag] = useDrag(() => ({
       type: "projectCard",
       item: { id, project }
    }))
+
+   const showMenu = () => { setMenuOpen(!menuOpen) }
    return (
       <div ref={drag}
          className="relative flex flex-col items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
       >
-         {status === 'Backlog' && <button
-            className="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 mt-3 mr-2 text-gray-500 rounded hover:bg-gray-200 hover:text-gray-700 group-hover:flex"
-         >
-            <svg
-               className="w-4 h-4 fill-current"
-               xmlns="http://www.w3.org/2000/svg"
-               viewBox="0 0 20 20"
-               fill="currentColor"
+         {(status === 'Backlog' || menuOpen) && <>
+            <button onClick={showMenu}
+               className="absolute top-0 right-0 flex items-center justify-center hidden w-5 h-5 mt-3 mr-2 text-gray-500 rounded hover:bg-gray-200 hover:text-gray-700 group-hover:flex"
+               id="dropdownDividerButton" data-dropdown-toggle="dropdownDivider"
             >
-               <path
-                  d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
-               />
-            </svg>
-         </button>}
+               <svg
+                  className="w-4 h-4 fill-current"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+               >
+                  <path
+                     d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"
+                  />
+               </svg>
+
+            </button>
+            {menuOpen && <DropdownMenu id={id} menuControl={showMenu} />}
+         </>
+
+         }
          <span
             className="flex items-center h-6 px-3 text-xs font-semibold text-pink-500 bg-pink-100 rounded-full"
          >{title}</span

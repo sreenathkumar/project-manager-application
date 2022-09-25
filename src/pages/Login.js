@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import Error from '../components/ui/Error';
 import Loader from '../components/ui/Loader';
 import LogoImage from '../assets/images/logo.svg'
+import 'react-toastify/dist/ReactToastify.css';
 
 
 export default function Login() {
@@ -12,7 +13,7 @@ export default function Login() {
    const [error, setError] = useState('');
    const [loading, setLoading] = useState(false)
 
-   const [login, { data, isLoading, error: responseError }] = useLoginMutation()
+   const [login, { data, isLoading, error: responseError, isSuccess }] = useLoginMutation()
 
    const navigate = useNavigate()
 
@@ -21,7 +22,10 @@ export default function Login() {
          setError(responseError.data);
       }
       if (data?.accessToken && data?.user) {
-         navigate("/teams");
+         setTimeout(() => {
+            navigate("/teams");
+         }, 500);
+
       }
       if (isLoading) {
          setLoading(true)
@@ -40,11 +44,10 @@ export default function Login() {
       setEmail('')
       setPassword('')
    };
-
    //
 
    return (loading ? <Loader /> :
-      <div className="grid place-items-center h-screen bg-[#F9FAFB">
+      <><div className="grid place-items-center h-screen bg-[#F9FAFB">
          <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">
                <div>
@@ -87,5 +90,7 @@ export default function Login() {
             </div>
          </div>
       </div>
+
+      </>
    )
 }

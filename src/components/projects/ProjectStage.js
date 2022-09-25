@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import { useDrop } from 'react-dnd';
-import { useEditProjectMutation, useGetProjectsQuery } from '../../features/projects/projectsApi';
+import { useEditProjectMutation } from '../../features/projects/projectsApi';
 import AddProjectsModal from './AddProjectsModal';
 import ProjectCard from './ProjectCard'
 
-export default function ProjectStage({ name }) {
+export default function ProjectStage({ name, projects }) {
    const [modalOpen, setModalOpen] = useState(false);
-   const [hovered, setHovered] = useState(false)
-   const { data: projects } = useGetProjectsQuery() || {};
+
    const [editProject] = useEditProjectMutation() || {};
    const filteredProjects = projects?.filter(project => project.status === name);
    const [{ isOver }, drop] = useDrop(() => ({
@@ -17,9 +16,6 @@ export default function ProjectStage({ name }) {
          isOver: !!monitor.isOver()
       })
    }))
-
-   console.log(hovered);
-
 
    const actionOnDrop = (id, project) => {
 
