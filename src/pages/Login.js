@@ -13,7 +13,7 @@ export default function Login() {
    const [error, setError] = useState('');
    const [loading, setLoading] = useState(false)
 
-   const [login, { data, isLoading, error: responseError, isSuccess }] = useLoginMutation()
+   const [login, { data, isLoading, error: responseError }] = useLoginMutation()
 
    const navigate = useNavigate()
 
