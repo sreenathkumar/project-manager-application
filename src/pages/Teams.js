@@ -3,12 +3,10 @@ import AddTeamModal from "../components/teams/AddTeamModal";
 import TeamCard from "../components/teams/TeamCard";
 import { useGetTeamsQuery } from "../features/team/teamApi";
 import Loader from '../components/ui/Loader'
-import { useSelector } from "react-redux";
 
 
 
 export default function Teams() {
-   const { email } = useSelector((state) => state.auth.user)
    const { data: teams, isLoading, isError } = useGetTeamsQuery() || {};
 
 

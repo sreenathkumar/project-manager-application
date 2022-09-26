@@ -55,7 +55,8 @@ export default function ProjectStage({ name, projects }) {
                </button>}
             </div>
             <div className="flex flex-col pb-2 overflow-auto .scrollbar scrollbar-style">
-               {filteredProjects?.map((item, index) => <ProjectCard key={index} project={item} />)}
+               {filteredProjects.length === 0 ? "No projects found" :
+                  filteredProjects?.map((item, index) => <ProjectCard key={index} project={item} />)}
             </div>
          </div>
       </>

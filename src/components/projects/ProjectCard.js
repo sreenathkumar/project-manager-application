@@ -8,7 +8,7 @@ export default function ProjectCard({ project }) {
    const [menuOpen, setMenuOpen] = useState(false)
    const { id, title, description, avatar, timestamp, status } = project || {}
 
-   const [{ }, drag] = useDrag(() => ({
+   const [, drag] = useDrag(() => ({
       type: "projectCard",
       item: { id, project }
    }))

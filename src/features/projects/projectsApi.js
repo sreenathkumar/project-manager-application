@@ -42,6 +42,7 @@ export const projectApi = apiSlice.injectEndpoints({
                undefined,
                (draft) => {
                   draft.forEach(project => {
+                     //eslint-disable-next-line
                      if (project.id == id) {
                         project.status = data.status;
                      }
@@ -68,7 +69,7 @@ export const projectApi = apiSlice.injectEndpoints({
                undefined,
                (draft) => {
                   draft.forEach((project, index) => {
-
+                     //eslint-disable-next-line
                      if (project.id == id) {
 
                         draft.splice(index, 1);

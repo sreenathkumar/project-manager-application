@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useState } from "react"
+import { useSelector } from "react-redux"
 import { useCreateProjectMutation } from "../../features/projects/projectsApi"
-import { useGetSigleTeamQuery, useGetTeamsQuery } from "../../features/team/teamApi"
+import { useGetTeamsQuery } from "../../features/team/teamApi"
 import Error from "../ui/Error"
 
 
@@ -13,7 +13,7 @@ export default function AddProjectsModal({ control, open }) {
    const { user: loggedInUser } = useSelector((state) => state.auth) || {};
    const { email: myEmail } = loggedInUser || {};
    const { data: myTeams } = useGetTeamsQuery(myEmail)
-   const [creatProject, { isLoading, isError, isSuccess, }] = useCreateProjectMutation() || []
+   const [creatProject, { isLoading, isError, }] = useCreateProjectMutation() || []
 
    const handleSubmit = (e) => {
       e.preventDefault()
