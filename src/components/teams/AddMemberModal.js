@@ -52,15 +52,6 @@ export default function AddMemberModal({ team, open, control }) {
       // eslint-disable-next-line react-hooks/exhaustive-deps
    }, [editTeamSuccess]);
 
-   const doSearch = (value) => {
-      if (isValidEmail(value)) {
-         // check user API
-         setMemberCheck(true);
-         setMemberEmail(value);
-         setMemberExists(false)
-      }
-   };
-
    const handleSubmit = (e) => {
       e.preventDefault();
 
@@ -75,6 +66,15 @@ export default function AddMemberModal({ team, open, control }) {
       setMemberEmail('')
       setMemberCheck(false)
    }
+
+   const doSearch = (value) => {
+      if (isValidEmail(value)) {
+         // check user API
+         setMemberCheck(true);
+         setMemberEmail(value);
+         setMemberExists(false)
+      }
+   };
 
    const handleSearch = debounceHandler(doSearch, 500);
    return (

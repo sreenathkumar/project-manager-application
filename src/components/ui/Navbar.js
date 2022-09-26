@@ -4,6 +4,8 @@ import { Link, useMatch } from 'react-router-dom'
 import { userLoggedOut } from '../../features/auth/authSlice';
 import useAuth from '../../hooks/useAuth';
 import logoImage from '../../assets/images/logo.svg'
+import debounceHandler from '../../utils/debounceHandler';
+import { searchProject } from '../../features/projects/projectsSlice'
 
 
 export default function Navbar() {
@@ -16,12 +18,17 @@ export default function Navbar() {
    const handleLogOut = () => {
       dispatch(userLoggedOut())
    }
+   const doSearch = (value) => {
+      dispatch(searchProject(value))
+   }
+
+   const handleSearch = debounceHandler(doSearch, 500)
    return (
       <nav
          className="flex items-center flex-shrink-0 w-full h-16 px-10 bg-white bg-opacity-75"
       >
          <Link to="/projects"><img src={logoImage} className="h-10 w-10" alt='my logo' /></Link>
-         {inProjectRoute && <input
+         {inProjectRoute && <input onChange={(e) => handleSearch(e.target.value)}
             className="flex items-center h-10 px-4 ml-10 text-sm bg-gray-200 rounded-full focus:outline-none focus:ring"
             type="search"
             placeholder="Search for anything…"

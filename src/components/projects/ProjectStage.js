@@ -11,13 +11,13 @@ export default function ProjectStage({ name, projects }) {
    const filteredProjects = projects?.filter(project => project.status === name);
    const [{ isOver }, drop] = useDrop(() => ({
       accept: 'projectCard',
-      drop: (item) => actionOnDrop(item.id, item.project),
+      drop: (item) => actionOnDrop(item.id),
       collect: (monitor) => ({
          isOver: !!monitor.isOver()
       })
    }))
 
-   const actionOnDrop = (id, project) => {
+   const actionOnDrop = (id) => {
 
       ///Doing what happen after dropping the item
       const updatedProject = { status: name }

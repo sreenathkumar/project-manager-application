@@ -1,22 +1,39 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDrag } from "react-dnd"
+import { useSelector } from "react-redux"
 import convertTime from "../../utils/convertTime"
 import DropdownMenu from "../ui/DropdownMenu"
 
 
 export default function ProjectCard({ project }) {
+   const { searchedText } = useSelector((state) => state.searched)
    const [menuOpen, setMenuOpen] = useState(false)
+   const [textFound, setTextFound] = useState(false);
    const { id, title, description, avatar, timestamp, status } = project || {}
+
+   useEffect(() => {
+      const foundMatched = title.toLowerCase().replaceAll(/\s/g, '').match(searchedText.toLowerCase().replaceAll(/\s/g, ''))
+      if (textFound) {
+         setTextFound(false)
+      }
+      if (searchedText === '') {
+         setTextFound(false)
+      } else if (foundMatched?.length > 0) {
+         setTextFound(true)
+      }
+
+   }, [searchedText, title, textFound])
+
 
    const [, drag] = useDrag(() => ({
       type: "projectCard",
-      item: { id, project }
+      item: { id }
    }))
 
    const showMenu = () => { setMenuOpen(!menuOpen) }
    return (
       <div ref={drag}
-         className="relative flex flex-col items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
+         className={`relative flex flex-col items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100 ${textFound && "ring-2 ring-pink-500 ring-inset"}`}
       >
          {(status === 'Backlog' || menuOpen) && <>
             <button onClick={showMenu}
