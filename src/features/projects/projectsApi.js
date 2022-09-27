@@ -1,4 +1,3 @@
-import { io } from "socket.io-client";
 import { apiSlice } from "../api/apiSlice";
 
 export const projectApi = apiSlice.injectEndpoints({
