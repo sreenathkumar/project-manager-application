@@ -13,8 +13,6 @@ export default function Projects() {
    const { email: myEmail } = useSelector((state) => state.auth.user)
    const { data: myTeams } = useGetTeamsQuery(myEmail)
    const [filteredProjects, setFilteredProjects] = useState([])
-   // const { allowcatedIds } = useSelector(state => state.auth)
-   // const dispatch = useDispatch()
 
    const { data: projects, isLoading, isError } = useGetProjectsQuery() || {};
 
