@@ -68,13 +68,13 @@ export default function AddTeamModal({ open, control }) {
                                  <label htmlFor="horizontal-list-radio-purple" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-purple-500' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
                               </div>
                            </li>
-                           <li className="w-full dark:border-gray-600">
+                           <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
                               <div className="flex items-center pl-3">
                                  <input onChange={(e) => setColor(e.target.value)} id="horizontal-list-radio-rose" type="radio" value="rose" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
                                  <label htmlFor="horizontal-list-radio-rose" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-rose-500' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
                               </div>
                            </li>
-                           <li className="w-full dark:border-gray-600">
+                           <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
                               <div className="flex items-center pl-3">
                                  <input onChange={(e) => setColor(e.target.value)} id="horizontal-list-radio-blue" type="radio" value="blue" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
                                  <label htmlFor="horizontal-list-radio-blue" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-blue-500' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
