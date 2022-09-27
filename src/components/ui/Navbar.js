@@ -19,6 +19,7 @@ export default function Navbar() {
 
    const handleLogOut = () => {
       dispatch(userLoggedOut())
+      setDropdownOpen(false)
    }
    const doSearch = (value) => {
       dispatch(searchProject(value))
