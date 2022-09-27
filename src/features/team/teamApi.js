@@ -8,7 +8,7 @@ export const teamApi = apiSlice.injectEndpoints({
       getTeams: builder.query({
          query: (userEmail) => `/teams?members_like=${userEmail}&_sort=timestamp&_order=desc`,
 
-         //put socket listners here
+         //socket listners here
          async onCacheEntryAdded(
             arg,
             { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
@@ -27,17 +27,17 @@ export const teamApi = apiSlice.injectEndpoints({
             try {
                await cacheDataLoaded;
                socket.on("teams", (data) => {
-
-                  updateCachedData((draft) => {
-
-                     //const foundUser = data?.data?.members.find((membar) => member.email ===)
-                     if (data?.data) {
-
-                     }
-
-                     //draft.data.push(data?.data)
-                  });
-
+                  console.log(data);
+                  if (data.data.members.includes(arg.userEmail)) {
+                     updateCachedData((draft) => {
+                        draft.forEach((element) => {
+                           if (Number(data.data.id) === Number(element.id)) {
+                              draft.members = data.data.members
+                           }
+                        });
+                        draft.push(data.data)
+                     });
+                  }
                });
             } catch (error) {
 
@@ -76,8 +76,35 @@ export const teamApi = apiSlice.injectEndpoints({
             body: data
          }),
 
+      }),
+      deleteTeam: builder.mutation({
+         query: ({ id, email }) => ({
+            url: `/teams/${id}`,
+            method: 'DELETE',
+         }),
+         async onQueryStarted({ id, email }, { queryFulfilled, dispatch }) {
+            // optimistic update of projects cache
+            const deleteResult = dispatch(apiSlice.util.updateQueryData(
+               "getTeams",
+               email,
+               (draft) => {
+                  draft.forEach((team, index) => {
+                     //eslint-disable-next-line
+                     if (team.id == id) {
+                        draft.splice(index, 1);
+                     }
+                  })
+               }
+            ))
+
+            try {
+               await queryFulfilled;
+            } catch (error) {
+               deleteResult.undo()
+            }
+         }
       })
    })
 })
 
-export const { useCreateTeamMutation, useGetTeamsQuery, useEditTeamMutation, useGetSigleTeamQuery } = teamApi
+export const { useCreateTeamMutation, useGetTeamsQuery, useEditTeamMutation, useGetSigleTeamQuery, useDeleteTeamMutation } = teamApi

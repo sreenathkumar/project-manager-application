@@ -15,8 +15,9 @@ export const membersApi = apiSlice.injectEndpoints({
             method: 'PATCH',
             body: data,
          })
-      })
+      }),
+
    })
 })
 
-export const { useGetMemberQuery, useGetMemberTeamsQuery, useAddMemberMutation } = membersApi
+export const { useGetMemberQuery, useGetMemberTeamsQuery, useAddMemberMutation, useDeleteMemberMutation } = membersApi

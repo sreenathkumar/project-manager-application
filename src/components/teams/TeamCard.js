@@ -1,14 +1,22 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useDeleteTeamMutation } from "../../features/team/teamApi";
 import convertTime from "../../utils/convertTime";
 import AddMemberModal from "./AddMemberModal";
 
 
 export default function TeamCard({ team }) {
    const { title, description, color, timestamp, id } = team || {};
+   const { email } = useSelector((state) => state.auth.user)
+   const [deleteTeam] = useDeleteTeamMutation() || [];
    const time = convertTime(timestamp);
    const [modalOpen, setModalOpen] = useState(false);
    const modalControl = () => {
       setModalOpen(!modalOpen);
+   }
+   console.log(id);
+   const handleDeleteTeam = () => {
+      deleteTeam({ id, email })
    }
 
    return (
@@ -32,6 +40,12 @@ export default function TeamCard({ team }) {
                   />
                </svg>
             </button>
+            <button onClick={handleDeleteTeam}
+               className="absolute top-0 right-3 mr-4 flex items-center justify-center hidden w-5 h-5 mt-3 mr-2 text-gray-500 rounded hover:bg-gray-200 hover:text-gray-700 group-hover:flex"
+            >
+               <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path fill="currentColor" d="M13.5 6.5V7h5v-.5a2.5 2.5 0 0 0-5 0Zm-2 .5v-.5a4.5 4.5 0 1 1 9 0V7H28a1 1 0 1 1 0 2h-1.508L24.6 25.568A5 5 0 0 1 19.63 30h-7.26a5 5 0 0 1-4.97-4.432L5.508 9H4a1 1 0 0 1 0-2h7.5Zm2.5 6.5a1 1 0 1 0-2 0v10a1 1 0 1 0 2 0v-10Zm5-1a1 1 0 0 0-1 1v10a1 1 0 1 0 2 0v-10a1 1 0 0 0-1-1Z" /></svg>
+            </button>
+
             <span
                className={`flex items-center h-6 px-3 text-xs font-semibold text-${color}-500 bg-${color}-100 rounded-full`}
             >{title}</span

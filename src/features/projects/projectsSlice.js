@@ -10,9 +10,11 @@ const projectsSlice = createSlice({
    reducers: {
       searchProject: (state, action) => {
          state.searchedText = action.payload
-      }
-   }
+      },
+
+   },
+
 })
 
 export default projectsSlice.reducer
-export const { searchProject } = projectsSlice.actions
+export const { searchProject, } = projectsSlice.actions
