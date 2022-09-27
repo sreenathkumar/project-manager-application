@@ -8,17 +8,12 @@ import DropdownMenu from "../ui/DropdownMenu"
 
 export default function ProjectCard({ project, myTeams }) {
    const { searchedText } = useSelector((state) => state.searched)
-   const [getTeam, setGetTeam] = useState(false)
    const [menuOpen, setMenuOpen] = useState(false)
    const [textFound, setTextFound] = useState(false);
    const { email: loggedInEmail } = useSelector(state => state.auth.user)
-   const { data: teamInfo } = useGetSigleTeamQuery({ id: project?.teamIds[0] }, { skip: getTeam }) || {}
+   const { data: teamInfo } = useGetSigleTeamQuery({ id: project?.teamIds[0] }) || {}
    const { color: teamColor, title: teamName } = teamInfo || {}
    const { id, title, description, avatar, timestamp, status, creator } = project || {}
-
-
-   const team = myTeams?.filter((team) => team.id === Number(project?.teamIds[0]))
-   console.log(team);
 
    useEffect(() => {
       const foundMatched = title.toLowerCase().replaceAll(/\s/g, '').match(searchedText.toLowerCase().replaceAll(/\s/g, ''))

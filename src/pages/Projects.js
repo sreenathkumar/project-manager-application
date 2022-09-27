@@ -16,8 +16,6 @@ export default function Projects() {
 
    const { data: projects, isLoading, isError } = useGetProjectsQuery() || {};
 
-   console.log(projects);
-   console.log(myTeams);
    useEffect(() => {
 
       if (myTeams?.length > 0 && projects?.length > 0) {
