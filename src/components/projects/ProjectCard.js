@@ -13,7 +13,7 @@ export default function ProjectCard({ project, myTeams }) {
    const { email: loggedInEmail } = useSelector(state => state.auth.user)
    const { data: teamInfo } = useGetSigleTeamQuery({ id: project?.teamIds[0] }) || {}
    const { color: teamColor, title: teamName } = teamInfo || {}
-   const { id, title, description, avatar, timestamp, status, creator } = project || {}
+   const { id, title, avatar, timestamp, status, creator } = project || {}
 
    useEffect(() => {
       const foundMatched = title.toLowerCase().replaceAll(/\s/g, '').match(searchedText.toLowerCase().replaceAll(/\s/g, ''))
@@ -64,7 +64,7 @@ export default function ProjectCard({ project, myTeams }) {
          >{teamName}</span
          >
          <h4 className="mt-3 text-sm font-medium">
-            {description}
+            {title}
          </h4>
          <div
             className="flex items-center w-full mt-3 text-xs font-medium text-gray-400"
