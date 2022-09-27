@@ -7,6 +7,7 @@ export const teamApi = apiSlice.injectEndpoints({
    endpoints: (builder) => ({
       getTeams: builder.query({
          query: (userEmail) => `/teams?members_like=${userEmail}&_sort=timestamp&_order=desc`,
+
       }),
       getSigleTeam: builder.query({
          query: ({ id }) => `/teams/${id}`

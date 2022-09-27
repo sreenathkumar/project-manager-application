@@ -16,6 +16,8 @@ export default function Projects() {
 
    const { data: projects, isLoading, isError } = useGetProjectsQuery() || {};
 
+   console.log(projects);
+   console.log(myTeams);
    useEffect(() => {
 
       if (myTeams?.length > 0 && projects?.length > 0) {
@@ -53,7 +55,7 @@ export default function Projects() {
             <h1 className="text-2xl font-bold">Project Board</h1>
          </div>
          <div className="flex flex-grow px-10 mt-4 space-x-6 overflow-auto">
-            {stages.map((item, index) => <ProjectStage key={index} projects={filteredProjects} name={item} />)}
+            {stages.map((item, index) => <ProjectStage key={index} teams={myTeams} projects={filteredProjects} name={item} />)}
             <div className="flex-shrink-0 w-6"></div>
          </div>
       </div>

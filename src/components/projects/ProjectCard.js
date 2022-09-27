@@ -1,16 +1,24 @@
 import { useEffect, useState } from "react"
 import { useDrag } from "react-dnd"
 import { useSelector } from "react-redux"
+import { useGetSigleTeamQuery } from "../../features/team/teamApi"
 import convertTime from "../../utils/convertTime"
 import DropdownMenu from "../ui/DropdownMenu"
 
 
-export default function ProjectCard({ project }) {
+export default function ProjectCard({ project, myTeams }) {
    const { searchedText } = useSelector((state) => state.searched)
+   const [getTeam, setGetTeam] = useState(false)
    const [menuOpen, setMenuOpen] = useState(false)
    const [textFound, setTextFound] = useState(false);
    const { email: loggedInEmail } = useSelector(state => state.auth.user)
-   const { id, title, description, color, avatar, timestamp, status, creator } = project || {}
+   const { data: teamInfo } = useGetSigleTeamQuery({ id: project?.teamIds[0] }, { skip: getTeam }) || {}
+   const { color: teamColor, title: teamName } = teamInfo || {}
+   const { id, title, description, avatar, timestamp, status, creator } = project || {}
+
+
+   const team = myTeams?.filter((team) => team.id === Number(project?.teamIds[0]))
+   console.log(team);
 
    useEffect(() => {
       const foundMatched = title.toLowerCase().replaceAll(/\s/g, '').match(searchedText.toLowerCase().replaceAll(/\s/g, ''))
@@ -57,8 +65,8 @@ export default function ProjectCard({ project }) {
 
          }
          <span
-            className={`flex items-center h-6 px-3 text-xs font-semibold text-${color}-500 bg-${color}-100 rounded-full`}
-         >{title}</span
+            className={`flex items-center h-6 px-3 text-xs font-semibold text-${teamColor}-500 bg-${teamColor}-100 rounded-full`}
+         >{teamName}</span
          >
          <h4 className="mt-3 text-sm font-medium">
             {description}
