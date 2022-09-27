@@ -7,45 +7,6 @@ export const teamApi = apiSlice.injectEndpoints({
    endpoints: (builder) => ({
       getTeams: builder.query({
          query: (userEmail) => `/teams?members_like=${userEmail}&_sort=timestamp&_order=desc`,
-
-         //socket listners here
-         async onCacheEntryAdded(
-            arg,
-            { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
-         ) {
-            // create socket
-            const socket = io(process.env.REACT_APP_API_URL, {
-               reconnectionDelay: 1000,
-               reconnection: true,
-               reconnectionAttemps: 10,
-               transports: ["websocket"],
-               agent: false,
-               upgrade: false,
-               rejectUnauthorized: false,
-            });
-
-            try {
-               await cacheDataLoaded;
-               socket.on("teams", (data) => {
-                  console.log(data);
-                  if (data.data.members.includes(arg.userEmail)) {
-                     updateCachedData((draft) => {
-                        draft.forEach((element) => {
-                           if (Number(data.data.id) === Number(element.id)) {
-                              draft.members = data.data.members
-                           }
-                        });
-                        draft.push(data.data)
-                     });
-                  }
-               });
-            } catch (error) {
-
-            }
-            await cacheEntryRemoved;
-            socket.close();
-         },
-
       }),
       getSigleTeam: builder.query({
          query: ({ id }) => `/teams/${id}`

@@ -14,7 +14,6 @@ export default function TeamCard({ team }) {
    const modalControl = () => {
       setModalOpen(!modalOpen);
    }
-   console.log(id);
    const handleDeleteTeam = () => {
       deleteTeam({ id, email })
    }

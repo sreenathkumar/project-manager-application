@@ -5,43 +5,6 @@ export const projectApi = apiSlice.injectEndpoints({
    endpoints: (builder) => ({
       getProjects: builder.query({
          query: () => `/projects?_sort=timestamp&_order=desc`,
-         //socket listners here
-         async onCacheEntryAdded(
-            arg,
-            { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
-         ) {
-            // create socket
-            const socket = io(process.env.REACT_APP_API_URL, {
-               reconnectionDelay: 1000,
-               reconnection: true,
-               reconnectionAttemps: 10,
-               transports: ["websocket"],
-               agent: false,
-               upgrade: false,
-               rejectUnauthorized: false,
-            });
-
-            try {
-               await cacheDataLoaded;
-               socket.on("teams", (data) => {
-                  console.log(data);
-                  updateCachedData((draft) => {
-
-                     //const foundUser = data?.data?.members.find((membar) => member.email ===)
-                     if (data?.data) {
-
-                     }
-
-                     //draft.data.push(data?.data)
-                  });
-
-               });
-            } catch (error) {
-
-            }
-            await cacheEntryRemoved;
-            socket.close();
-         },
       }),
       createProject: builder.mutation({
          query: (data) => ({
