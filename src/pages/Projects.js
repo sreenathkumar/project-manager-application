@@ -1,15 +1,39 @@
-
-import React from 'react'
-import ProjectStage from '../components/projects/ProjectStage'
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { useGetProjectsQuery } from '../features/projects/projectsApi';
+import { useEffect, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useSelector } from 'react-redux';
 import { BarLoader } from 'react-spinners';
+import ProjectStage from '../components/projects/ProjectStage';
 import Error from '../components/ui/Error';
+import { useGetProjectsQuery } from '../features/projects/projectsApi';
+import { useGetTeamsQuery } from '../features/team/teamApi';
 
 export default function Projects() {
-   const { data: projects, isLoading, isError } = useGetProjectsQuery() || {};
    const stages = ["Backlog", "Ready", "Doing", "Review", "Blocked"]
+   const { email: myEmail } = useSelector((state) => state.auth.user)
+   const { data: myTeams } = useGetTeamsQuery(myEmail)
+   const [filteredProjects, setFilteredProjects] = useState([])
+   // const { allowcatedIds } = useSelector(state => state.auth)
+   // const dispatch = useDispatch()
+
+   const { data: projects, isLoading, isError } = useGetProjectsQuery() || {};
+
+   useEffect(() => {
+
+      if (myTeams?.length > 0 && projects?.length > 0) {
+         let matchedProject = []
+         myTeams?.forEach(team => {
+            projects?.forEach(project => {
+               const found = project.teamIds.includes(team.id.toString())
+               if (found) {
+                  matchedProject.push(project)
+               }
+            })
+         })
+         setFilteredProjects(matchedProject)
+      }
+   }, [myTeams, projects])
+
 
    let content = ''
    if (isLoading) {
@@ -31,7 +55,7 @@ export default function Projects() {
             <h1 className="text-2xl font-bold">Project Board</h1>
          </div>
          <div className="flex flex-grow px-10 mt-4 space-x-6 overflow-auto">
-            {stages.map((item, index) => <ProjectStage key={index} projects={projects} name={item} />)}
+            {stages.map((item, index) => <ProjectStage key={index} projects={filteredProjects} name={item} />)}
             <div className="flex-shrink-0 w-6"></div>
          </div>
       </div>

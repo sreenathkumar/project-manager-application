@@ -4,7 +4,7 @@ import AddMemberModal from "./AddMemberModal";
 
 
 export default function TeamCard({ team }) {
-   const { title, description, timestamp, id } = team || {};
+   const { title, description, color, timestamp, id } = team || {};
    const time = convertTime(timestamp);
    const [modalOpen, setModalOpen] = useState(false);
    const modalControl = () => {
@@ -15,7 +15,7 @@ export default function TeamCard({ team }) {
       <>
          <AddMemberModal open={modalOpen} team={team} control={modalControl} />
          <div
-            className="relative flex flex-col items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
+            className="relative flex flex-col justify-between items-start p-4 mt-3 bg-white rounded-lg cursor-pointer bg-opacity-90 group hover:bg-opacity-100"
             draggable="true"
          >
             <button onClick={() => setModalOpen(!modalOpen)}
@@ -33,7 +33,7 @@ export default function TeamCard({ team }) {
                </svg>
             </button>
             <span
-               className="flex items-center h-6 px-3 text-xs font-semibold text-pink-500 bg-pink-100 rounded-full"
+               className={`flex items-center h-6 px-3 text-xs font-semibold text-${color}-500 bg-${color}-100 rounded-full`}
             >{title}</span
             >
             <h4 className="mt-3 text-sm font-medium">

@@ -1,11 +1,12 @@
 import { io } from "socket.io-client";
 import { apiSlice } from "../api/apiSlice";
 
+
 export const teamApi = apiSlice.injectEndpoints({
 
    endpoints: (builder) => ({
       getTeams: builder.query({
-         query: (userEmail) => `/teams?members_like${userEmail}_sort=timestamp&_order=desc`,
+         query: (userEmail) => `/teams?members_like=${userEmail}&_sort=timestamp&_order=desc`,
 
          //put socket listners here
          async onCacheEntryAdded(
@@ -44,6 +45,7 @@ export const teamApi = apiSlice.injectEndpoints({
             await cacheEntryRemoved;
             socket.close();
          },
+
       }),
       getSigleTeam: builder.query({
          query: ({ id }) => `/teams/${id}`
@@ -55,11 +57,10 @@ export const teamApi = apiSlice.injectEndpoints({
             body: data
          }),
 
-         async onQueryStarted({ data }, { queryFulfilled, dispatch }) {
+         async onQueryStarted(data, { queryFulfilled, dispatch }) {
             const team = await queryFulfilled;
             if (team) {
-               dispatch(apiSlice.util.updateQueryData("getTeams", data, (draft) => {
-                  team.data.id.toString()
+               dispatch(apiSlice.util.updateQueryData("getTeams", data.members, (draft) => {
                   draft.unshift({
                      ...team.data,
                      id: team.data.id.toString()

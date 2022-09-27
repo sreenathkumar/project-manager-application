@@ -46,7 +46,7 @@ export default function Login() {
    };
    //
 
-   return (loading ? <Loader /> :
+   return (loading && !responseError ? <Loader /> :
       <><div className="grid place-items-center h-screen bg-[#F9FAFB">
          <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-md w-full space-y-8">

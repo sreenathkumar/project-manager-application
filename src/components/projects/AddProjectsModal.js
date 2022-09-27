@@ -8,10 +8,11 @@ import Error from "../ui/Error"
 export default function AddProjectsModal({ control, open }) {
    const [title, setTitle] = useState('')
    const [description, setDescription] = useState('')
+   const [color, setColor] = useState('')
    const [teamId, setTeamId] = useState("")
    const [resError, setResError] = useState('')
    const { user: loggedInUser } = useSelector((state) => state.auth) || {};
-   const { email: myEmail } = loggedInUser || {};
+   const { email: myEmail, avatar } = loggedInUser || {};
    const { data: myTeams } = useGetTeamsQuery(myEmail)
    const [creatProject, { isLoading, isError, }] = useCreateProjectMutation() || []
 
@@ -21,11 +22,12 @@ export default function AddProjectsModal({ control, open }) {
          const data = {
             title,
             description,
+            color,
             status: "Backlog",
             teamIds: [teamId],
             creator: `${myEmail}`,
             timestamp: new Date().getTime(),
-            avatar: "https://img.freepik.com/free-vector/mysterious-mafia-man-smoking-cigarette_52683-34828.jpg?w=740&t=st=1663969436~exp=1663970036~hmac=bf4b7a0a5db566b5d8f176728e2c6f22b16758285e424a5fd24a1b63246c63ca"
+            avatar
          }
          creatProject(data)
          setTitle('');
@@ -55,6 +57,48 @@ export default function AddProjectsModal({ control, open }) {
                      <div>
                         <label htmlFor="team-title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Poject Tiltle</label>
                         <input type="text" name="team-title" id="team-title" className="outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" placeholder="Lorem Ipsum is simply dummy text" required value={title} onChange={(e) => setTitle(e.target.value)} />
+                     </div>
+                     <div>
+                        <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Select a color</label>
+
+                        <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                           <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                              <div className="flex items-center pl-3">
+                                 <input id="horizontal-list-radio-slate" type="radio" value="slate" onChange={(e) => setColor(e.target.value)} name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                 <label htmlFor="horizontal-list-radio-slate" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-slate-800' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
+                              </div>
+                           </li>
+                           <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                              <div className="flex items-center pl-3">
+                                 <input onChange={(e) => setColor(e.target.value)} id="horizontal-list-radio-pink" type="radio" value="pink" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                 <label htmlFor="horizontal-list-radio-pink" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-pink-500' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
+                              </div>
+                           </li>
+                           <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
+                              <div className="flex items-center pl-3">
+                                 <input onChange={(e) => setColor(e.target.value)} id=" hidden horizontal-list-radio-purple" type="radio" value="purple" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                 <label htmlFor="horizontal-list-radio-purple" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-purple-500' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
+                              </div>
+                           </li>
+                           <li className="w-full dark:border-gray-600">
+                              <div className="flex items-center pl-3">
+                                 <input onChange={(e) => setColor(e.target.value)} id="horizontal-list-radio-rose" type="radio" value="rose" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                 <label htmlFor="horizontal-list-radio-rose" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-rose-500' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
+                              </div>
+                           </li>
+                           <li className="w-full dark:border-gray-600">
+                              <div className="flex items-center pl-3">
+                                 <input onChange={(e) => setColor(e.target.value)} id="horizontal-list-radio-blue" type="radio" value="blue" name="list-radio" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                 <label htmlFor="horizontal-list-radio-blue" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-blue-500' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
+                              </div>
+                           </li>
+                           <li className="w-full dark:border-gray-600">
+                              <div className="flex items-center pl-3">
+                                 <input onChange={(e) => setColor(e.target.value)} id="horizontal-list-radio-green" type="radio" value="green" name="list-radio" className="w-4 h-4 text-blue- 600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500" />
+                                 <label htmlFor="horizontal-list-radio-green" className="py-3 ml-2 w-full text-sm font-medium text-gray-900 dark:text-gray-300"><svg xmlns="http://www.w3.org/2000/svg" className='fill-green-500' width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" /></svg></label>
+                              </div>
+                           </li>
+                        </ul>
                      </div>
                      <div>
                         <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>

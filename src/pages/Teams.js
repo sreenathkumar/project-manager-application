@@ -1,13 +1,31 @@
-import { useState } from "react"
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import AddTeamModal from "../components/teams/AddTeamModal";
 import TeamCard from "../components/teams/TeamCard";
+import Loader from '../components/ui/Loader';
 import { useGetTeamsQuery } from "../features/team/teamApi";
-import Loader from '../components/ui/Loader'
 
 
 
 export default function Teams() {
-   const { data: teams, isLoading, isError } = useGetTeamsQuery() || {};
+   const { email: myEmail } = useSelector(state => state.auth.user)
+   const { data: teams, isLoading, isError } = useGetTeamsQuery(myEmail) || {};
+
+
+   // useEffect(() => {
+   //    let newArr = []
+   //    teams?.forEach(team => {
+   //       let alreadyHas = teamIds?.find(id => team.id == id);
+   //       console.log(alreadyHas);
+
+   //       if (!alreadyHas) {
+   //          newArr.push(Number(team.id));
+   //       }
+   //    })
+   //    dispatch(addToTeams(newArr))
+
+   // }, [teams, dispatch])
+
 
 
    // const teamIds = []
@@ -30,6 +48,7 @@ export default function Teams() {
    //what to render
    let content = ''
 
+
    if (isLoading) {
       content = <Loader />
    }
@@ -37,6 +56,7 @@ export default function Teams() {
       content = <div>Something goes wrong...</div>
    }
    if (!isLoading && !isError) {
+
       content = <>
          {modalOpen && <AddTeamModal open={modalOpen} control={modalControl} />}
          <div className="px-10 mt-6 flex justify-between">

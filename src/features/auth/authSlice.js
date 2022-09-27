@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
    accessToken: '',
-   user: {}
+   user: {},
+   allocatedTeamIds: []
 }
 
 const authSlice = createSlice({

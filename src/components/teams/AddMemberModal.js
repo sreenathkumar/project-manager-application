@@ -12,6 +12,7 @@ export default function AddMemberModal({ team, open, control }) {
    const [memberEmail, setMemberEmail] = useState('');
    const [memberExists, setMemberExists] = useState(false)
    const [memberCheck, setMemberCheck] = useState(false);
+   const [buttonDisabled, setButtonDisabled] = useState(true)
    const { user: loggedInUser } = useSelector((state) => state.auth) || {};
    const { email: myEmail } = loggedInUser || {};
    const [responseError, setResponseError] = useState('')
@@ -36,6 +37,8 @@ export default function AddMemberModal({ team, open, control }) {
                const foundMember = data[0]?.users.find((item) => item.email === member[0].email)
                if (foundMember) {
                   setMemberExists(true)
+               } else {
+                  setButtonDisabled(false)
                }
             })
             .catch((err) => {
@@ -56,7 +59,7 @@ export default function AddMemberModal({ team, open, control }) {
       e.preventDefault();
 
       const newArray = {
-         "members": `${team?.members}-${member[0].email}`,
+         "members": `${team?.members}-${member[0]?.email}`,
          "users": [...team.users, { email: member[0]?.email, name: member[0]?.name, id: member[0]?.id }]
       }
       editTeam({
@@ -98,7 +101,7 @@ export default function AddMemberModal({ team, open, control }) {
 
 
                      <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
-                        disabled={memberExists && (member?.length > 0 && member[0].email === myEmail)}
+                        disabled={buttonDisabled || (member?.length > 0 && member[0].email === myEmail)}
                      >
                         Add Member
                      </button>
