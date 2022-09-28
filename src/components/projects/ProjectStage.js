@@ -4,7 +4,7 @@ import { useEditProjectMutation } from '../../features/projects/projectsApi';
 import AddProjectsModal from './AddProjectsModal';
 import ProjectCard from './ProjectCard'
 
-export default function ProjectStage({ name, projects, myTeams }) {
+export default function ProjectStage({ name, projects }) {
    const [modalOpen, setModalOpen] = useState(false);
 
    const [editProject] = useEditProjectMutation() || {};
@@ -55,7 +55,8 @@ export default function ProjectStage({ name, projects, myTeams }) {
                </button>}
             </div>
             <div className="flex flex-col pb-2 overflow-auto .scrollbar scrollbar-style">
-               {filteredProjects?.map((item, index) => <ProjectCard myTeams={myTeams} key={index} project={item} />)}
+               {
+                  filteredProjects?.map((item, index) => <ProjectCard key={index} project={item} />)}
             </div>
          </div>
       </>

@@ -6,7 +6,7 @@ import convertTime from "../../utils/convertTime"
 import DropdownMenu from "../ui/DropdownMenu"
 
 
-export default function ProjectCard({ project, myTeams }) {
+export default function ProjectCard({ project }) {
    const { searchedText } = useSelector((state) => state.searched)
    const [menuOpen, setMenuOpen] = useState(false)
    const [textFound, setTextFound] = useState(false);
